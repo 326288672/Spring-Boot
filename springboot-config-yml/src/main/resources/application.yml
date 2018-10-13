@@ -1,0 +1,14 @@
+server:
+  port: 8081 # 更改tomcat端口号，默认端口号为8080
+person:
+  last-name: 张三
+  age: 18
+  boss: false
+  birth: 2018/8/8
+  maps: {k1: v1,k2: v2} # maps属性值的写法
+  lists: # lists属性值的写法
+    -zhangsan
+    -lisi
+  dog:  # 依赖注入的属性写法
+    name: 泰迪
+    age: 3

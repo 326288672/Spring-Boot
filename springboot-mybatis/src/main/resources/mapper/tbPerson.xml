@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wang.mybatis.dao.TbPersonDao">
+
+    <resultMap id="BaseResultMap" type="com.wang.mybatis.model.po.TbPersonPO">
+		<id column="id" property="id" jdbcType="BIGINT"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="age" property="age" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO tb_person(id,name,age)
+        VALUES(null,#{name},#{age})
+    </insert>
+    <insert id="batchInsert" parameterType="list">
+        INSERT INTO tb_person(id,name,age)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (null,#{item.name},#{item.age})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        id=VALUES(id),name=VALUES(name),age=VALUES(age)
+    </insert>
+    <update id="update">
+        UPDATE tb_person
+        <trim prefix="SET" suffixOverrides=",">
+			<if test="name!=null">
+                name=#{name},
+            </if>
+			<if test="age!=null">
+                age=#{age},
+            </if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <sql id="SELECT_FIELD">
+        id,name,age
+    </sql>
+
+    <sql id="QUERY_SQL">
+        from tb_person
+        <where>
+			<if test="id!=null and id!=-1">
+               AND id=#{id}
+            </if>
+			<if test="name!=null">
+               AND name=#{name}
+            </if>
+			<if test="age!=null and age!=-1">
+               AND age=#{age}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="query" resultMap="BaseResultMap">
+        select <include refid="SELECT_FIELD"/>
+        <include refid="QUERY_SQL"/>
+        <if test="limit!=null and limit!=-1 ">
+            <if test="offset!=null and offset!=-1">
+                limit #{offset},#{limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="count" resultType="long">
+        select count(*)
+        <include refid="QUERY_SQL"/>
+    </select>
+   <delete id="delete">
+       delete from tb_person where id=#{id}
+   </delete>
+</mapper>

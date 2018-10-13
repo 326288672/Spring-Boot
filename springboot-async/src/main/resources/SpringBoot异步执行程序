@@ -1,0 +1,6 @@
+springboot异步执行程序具体步骤：
+
+使用注解@EnableAsync开启异步，会自动扫描
+
+定义@Component、@Async作为组件被容器扫描并且执行
+
